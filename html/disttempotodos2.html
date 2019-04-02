@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Colaborações por Grande Área</title>
+    <title>Análise Temporal</title>
     <script src="../js/d3.v3.min.js"></script>
     <script src="../js/d3.tip.v0.6.3.js"></script>
     <!-- Bootstrap core CSS -->
@@ -16,7 +16,7 @@
     
 
     <!-- Custom styles for this template -->
-    <link href="../css/styleindividual.css" rel="stylesheet">
+    <link href="../css/disttempotodos.css" rel="stylesheet">
   </head>
 
   <body>
@@ -71,36 +71,27 @@
     <main role="main" class="container">
 
       <div class="starter-template">
-        <h1>Colaborações por Grande Área</h1>
+        <h1>Análise Temporal</h1>
         <!-- <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p> -->
       </div>
 
     </main><!-- /.container -->
 
-    <div id="corpo">
-        <div style="display: flex;justify-content: flex-start;">
-<!--Select para selecionar qual gráfico-->
-          <div>
-            <select id="area" onchange="atualiza_div(get_area());">
-              <option value="1">Ciências Agrárias</option>
-	      <option value="2">Ciências Biológicas</option>
-	      <option value="3">Ciências da Saúde</option>
-	      <option value="4">Ciências Exatas e da Terra</option>
-              <option value="5">Ciências Humanas</option>
-	      <option value="6">Ciências Sociais e Aplicadas</option>
-	      <option value="7">Engenharias</option>
-	      <option value="8">Linguistíca, Letras e Artes</option>
-	    </select>
-	  </div>
-        </div>
-        </br></br>    
+  <div id="corpo">
+        </br></br>
 	  <div id="corpo1" style="display: flex;justify-content: space-between;">
 	    <div id="corpo1-1">
-	    </div>  
-	    <div id="corpo1-2">
 	    </div>
 	  </div>
-    </div>
+          <br><br>
+          <div id="corpo2" style="display: flex;justify-content: space-between;">
+	    <div id="corpo2-1">
+	    </div>
+	  </div>
+	  <div id="corpo5" style="display: flex;justify-content: space-between;">
+	  </div>
+  </div>
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -113,74 +104,37 @@
   <script>
         function atualiza_div(area)
 	{
-             d3.select("svg").remove();
+	     d3.select("svg").remove();
+	     d3.select("svg").remove();
 	     d3.select("svg").remove();
              
 
-		  if(area == 1)
-		  {
-		     imprimeGrafico(1, "Ciências Agrárias", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 2)
-		  {
-		     imprimeGrafico(1, "Ciências Biológicas", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 3)
-		  {
-		     imprimeGrafico(1, "Ciências da Saúde", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 4)
-		  {
-		     imprimeGrafico(1, "Ciências Exatas e da Terra", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 5)
-		  {
-		     imprimeGrafico(1, "Ciências Humanas", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 6)
-		  {
-		     imprimeGrafico(1, "Ciências Sociais e Aplicadas", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 7)
-		  {
-		     imprimeGrafico(1, "Engenharias", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  else if(area == 8)
-		  {
-		     imprimeGrafico(1, "Linguística Letras e Artes", "../files/coautoria.csv", 'corpo1-1');
-		  }
-		  imprimeLegenda("../files/coautorialegenda.csv", 'corpo1-2');
+		  imprimeGrafico("Ciências Exatas e da Terra", "../files/at_cienciasexatasedaterra.csv", 'corpo1-1');
+                  imprimeGrafico("Engenharias", "../files/at_engenharias.csv", 'corpo2-1');
+                  imprimeLegenda("../files/coautorialegenda.csv", 'corpo5');
+            
 
 	}
 
-	function imprimeGrafico(idioma, great_area, arquivo, divsvg)
+	function imprimeGrafico(great_area, arquivo, divsvg)
         {
 
-             var margin = {top: 30, right: 30, bottom: 30, left: 30},
+             var margin = {top: 30, right: 30, bottom: 30, left: 50},
 			  width = document.getElementById(divsvg).offsetWidth - (margin.left) - (margin.right),
 			  height = document.getElementById(divsvg).offsetHeight - (margin.top) - (margin.bottom);
 
-             var formatPercent = d3.format(".0%");
+             var parseDate = d3.time.format("%Y").parse;
 
-	     var x = d3.scale.ordinal()
-		  .rangeRoundBands([0, width+ (margin.left)], .1);
+	     var x = d3.time.scale().range([0, width]);
+             var y = d3.scale.linear().range([height, 0]);
 
-	     var y = d3.scale.linear()
-		  .range([height, 0]);
+             var xAxis = d3.svg.axis().scale(x).tickSize(5).tickPadding(6).orient("bottom").ticks(5);
+             var yAxis = d3.svg.axis().scale(y).orient("left").ticks(5);
 
-	     var xAxis = d3.svg.axis()
-		  .scale(x)
-		  .orient("bottom");
-
-             var yAxis = d3.svg.axis()
-		  .scale(y)
-		  .orient("left")
-		  .tickFormat(formatPercent);
-
-	     var tip = d3.tip()
-		  .attr('class', 'd3-tip')
-		  .offset([-10, 0])
-		  .html(function(d) {return "<span style='color:white'>" + d.coautoria + "%</span>";});
+             var line = d3.svg.line()  
+		  .interpolate("linear")
+		  .x(function(d) { return x(d.ano); })
+		  .y(function(d) { return y(d.qtde); });
 
 
 //cria o svg que receberá o Grafico
@@ -188,31 +142,66 @@
 		  .attr("width", width + (margin.left + margin.right))
 		  .attr("height", height + margin.top + margin.bottom)
 		.append("g")
-		  .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); 
-                             
-             svg.call(tip);
+		  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-             var dataset = [];
-//le o csv e                 
-             d3.csv(arquivo, function(error, data) {  
-                  data.forEach(function(d)
-                  {   
-                    if(d.great_area1 == great_area)// então seleciona somente os dados que atender as condições selecionadas pelo usuário
-                    {
-	             
-                       dataset.push(d);
-                    }//e as insere na variável dataset
-                  });
+// gridlines in x axis function
+function make_x_gridlines() {		
+    return d3.svg.axis().scale(x).tickSize(5).tickPadding(6).orient("bottom").ticks(5);
+}
+
+// gridlines in y axis function
+function make_y_gridlines() {		
+    return d3.svg.axis().scale(y).orient("left").ticks(5);
+} 
+                             
+             d3.csv(arquivo, function(error, data) {
+		    data.forEach(function(d) {
+				d.ano = parseDate(d.ano);
+				d.qtde = +d.qtde;
+		    });
                
-               //dataset.sort(function(a, b){return a.coautoria-b.coautoria});
-               x.domain(dataset.map(function(d){return d.sigla;}));
-               y.domain([0, 0.75]);
+               x.domain(d3.extent(data, function(d) { return d.ano; }));
+               y.domain([0, 0.4]);
+
+  // add the X gridlines
+  svg.append("g")			
+      .attr("class", "grid")
+      .attr("transform", "translate(0," + height + ")")
+      .call(make_x_gridlines()
+          .tickSize(-height)
+          .tickFormat("")
+      )
+
+  // add the Y gridlines
+  svg.append("g")			
+      .attr("class", "grid")
+      .call(make_y_gridlines()
+          .tickSize(-width)
+          .tickFormat("")
+      )
+
+
+		// Nest the entries by symbol
+		    var dataNest = d3.nest()
+			.key(function(d) {return d.great_area;})
+			.entries(data);
+		    var color = d3.scale.category10();
+		 // set the colour scale
+		    // Loop through each symbol / key
+		    dataNest.forEach(function(d) {
+			svg.append("path")
+			    .attr("class", "line")
+			    .style("stroke", function() { // Add dynamically
+				return d["values"][0].color; })
+			    .attr("d", line(d.values));
+		    });
 
 //definido o dominio x do gráfico
-	          svg.append("g")
-		    .attr("class", "x axis")
-		    .attr("transform", "translate(0," + height + ")")
-		    //.call(xAxis);
+                  svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
 
 //definido o dominio y do gráfico
 	          svg.append("g")
@@ -223,36 +212,15 @@
 		    .attr("y", 6)
 		    .attr("dy", ".71em")
 		    .style("text-anchor", "end")
-		    .text("Frequência");
+		    .text("Média de Publicações");
 
 //Título do Gráfico *tittle* é adicionado aqui no svg
 		  svg.append("text")
 		    .attr("x", (width / 2))             
-		    .attr("y", 0 - (margin.top / 2)+10)
+		    .attr("y", 0 - (margin.top / 2))
 		    .attr("text-anchor", "middle")  
-		    .style("font-size", "30px") 
+		    .style("font-size", "20px") 
 		    .text(great_area);
-
-//Cria o gráfico. do tipo barra utilizando os dados que satisfaçam o usuário. o gráfico inicia com 0 no y e é mudado na transição
-                  var bars = svg.selectAll(".bar")
-		    .data(dataset)
-		    .enter()
-                  bars.append("rect")
-		    .attr("class", "bar")
-		    .attr("x", function(d) {return x(d.sigla)})
-		    .attr("width", x.rangeBand())
-		    .attr("y", function(d) {return y(d.coautoria/100);})
-		    .attr("height", function(d) {return height - y(d.coautoria/100);})
-		    .style("fill", function(d) {return d.color})
-		    .on('mouseover', tip.show)
-		    .on('mouseout', tip.hide)
-
-                 bars.append("text").text(function(d) {return d.coautoria+"%";})
-		    .attr("x", function(d) { return x(d.sigla)+x.rangeBand()/2; })
-		    .attr("y", function(d) {return y(d.coautoria/100)-6;})
-		    .attr("text-anchor", "middle")
-                    .style("font-size", "16px");
-
                                       
 	     });
 	}
@@ -279,44 +247,41 @@
 		.append("g")
 		  .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); 
              
-             d3.csv(arquivo, function(error, dataset) {  
+             d3.csv(arquivo, function(dataset) {  
 
 //Chama a legenda na div corpo 2. E define o tamanho do quadrinho dessa legenda 
-		 var legend = svg.selectAll('.legend')                     
+		 var legend = svg.selectAll(".legend")                     
 		    .data(dataset)                                   
 		    .enter()                                                
 		    .append('g')                                            
-		    .attr('class', 'legend')                                
-		    .attr('transform', function(d, i) {                     
-		       var height = legendRectSize + legendSpacing;          
-		       var offset =  height * color.domain().length / 2;     
-		       var horz = legendRectSize;                       
-		       var vert = i * height - offset;                       
-		       return 'translate(' + horz + ',' + vert + ')';        
-		       });
+		    .attr('class', 'legend')    ;                            
+		    //.attr('transform', function(d, i) {                     
+		       //var height = legendRectSize + legendSpacing;          
+		       //var offset =  height * color.domain().length / 2;     
+		       //var horz = legendRectSize;                       
+		       //var vert = i * height - offset;                       
+		       //return 'translate(' + horz + ',' + vert + ')';        
+		       //});
 
                  legend.append('rect')                                      // NEW
-                    .attr('width', legendRectSize)                          // NEW
-                    .attr('height', legendRectSize)                         // NEW
+                    .attr("x", function(d, i, k){k = (i%4)*300; return margin.right+k})
+		    .attr("y", function(d, i, k){if(i < 4){k=0;} else {k =1;} return k *  30;})
+                    .attr('width', 30)                          // NEW
+                    .attr('height', 30)                         // NEW
                     .style('fill', function(d) {return d.color})            // NEW
                     .style('stroke', color);                                // NEW                                                     
 //Os dizeres que serão mostrado na legenda, bem como seu espaço e posição		  
 		 legend.append('text')                                     
-		    .attr('x', legendRectSize + legendSpacing)              
-		    .attr('y', legendRectSize - legendSpacing)              
+		    .attr('x', function(d, i, k){k = (i%4)*300; return margin.right+k+34})              
+		    .attr("y", function(d, i, k){if(i < 4){k=0;} else {k =1;} return k *  30+22;})
+                    .style("font-size", "16px")              
 		    .text(function(d) {return d.great_area1;});
                                       
 	     });
 	}
-        
-        function get_area()
-        {
-          var areas = document.getElementById('area')
-          return areas.options[area.selectedIndex].value
-        }
 
   </script>
-<!--Final do JavaScript no Código-->     
+<!--Final do JavaScript no Código-->
   <script> atualiza_div(1);</script>
-  </body>
+</body>
 </html>
