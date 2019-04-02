@@ -9,14 +9,12 @@
     <link rel="icon" href="../../../../favicon.ico">
 
     <title>Colaborações por Região Geográfica</title>
-    <script src="../js/d3.v3.min.js"></script>
-    <script src="../js/d3.tip.v0.6.3.js"></script>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     
 
     <!-- Custom styles for this template -->
-    <link href="../css/regiontodos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style100.css" />
   </head>
   <body>
 
@@ -75,31 +73,14 @@
       </div>
 
     </main><!-- /.container -->
+    <div id="chartdiv"><script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="../js/regiontodos100.js"></script>
+    </div>
 
-  <div id="corpo">
-       </br></br>
-	  <div id="corpo1" style="display: flex;justify-content: space-between;">
-	    <div id="corpo1-1">
-	    </div>  
-	    <div id="corpo1-2">
-	    </div>
-	  </div>
 
-	  <div id="corpo2" style="display: flex;justify-content: space-between;">
-	    <div id="corpo2-1">
-	    </div>  
-	    <div id="corpo2-2">
-	    </div>
-	  </div>
-
-	  <div id="corpo3" style="display: flex;justify-content: space-between;">
-	    <div id="corpo3-1">
-	    </div>  
-	    <div id="corpo3-2">
-	    </div> 
-	  </div>
-  </div>
-
+    
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -107,188 +88,5 @@
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<!--Inicio do JavaScript no Código-->
-  <script>
-        function atualiza_div()
-	{
-	     d3.select("svg").remove();
-	     d3.select("svg").remove();
-             d3.select("svg").remove();
-	     d3.select("svg").remove();
-	     d3.select("svg").remove();
-	     d3.select("svg").remove();
-             
-             imprimeGrafico("Centro-Oeste", "../files/region.csv", 'corpo1-1');
-	     imprimeGrafico("Nordeste", "../files/region.csv", 'corpo1-2');
-	     imprimeGrafico("Norte", "../files/region.csv", 'corpo2-1');
-	     imprimeGrafico("Sudeste", "../files/region.csv", 'corpo2-2');
-	     imprimeGrafico("Sul", "../files/region.csv", 'corpo3-1');
-	     imprimeLegenda("../files/regionlegenda.csv", 'corpo3-2');
-	}
-
-	function imprimeGrafico(region, arquivo, divsvg)
-        {
-
-             var margin = {top: 30, right: 30, bottom: 30, left: 30},
-			  width = document.getElementById(divsvg).offsetWidth - (margin.left) - (margin.right),
-			  height = document.getElementById(divsvg).offsetHeight - (margin.top) - (margin.bottom);
-
-             var formatPercent = d3.format(".0%");
-
-	     var x = d3.scale.ordinal()
-		  .rangeRoundBands([0, width+ (margin.left)], .1);
-
-	     var y = d3.scale.linear()
-		  .range([height, 0]);
-
-	     var xAxis = d3.svg.axis()
-		  .scale(x)
-		  .orient("bottom");
-
-             var yAxis = d3.svg.axis()
-		  .scale(y)
-		  .orient("left")
-		  .tickFormat(formatPercent);
-
-	     var tip = d3.tip()
-		  .attr('class', 'd3-tip')
-		  .offset([-10, 0])
-		  .html(function(d) {return "<span style='color:white'>" + d.coautoria + "%</span>";});
-
-
-//cria o svg que receberá o Grafico
-	     var svg = d3.select("div#"+divsvg).append("svg")
-		  .attr("width", width + (margin.left + margin.right))
-		  .attr("height", height + margin.top + margin.bottom)
-		.append("g")
-		  .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); 
-                             
-             svg.call(tip);
-
-             var dataset = [];
-//le o csv e                 
-             d3.csv(arquivo, function(data) {  
-                  data.forEach(function(d)
-                  {   
-                    if(d.region_1 == region)// então seleciona somente os dados que atender as condições selecionadas pelo usuário
-                    {
-	             
-                       dataset.push(d);
-                    }//e as insere na variável dataset
-                  });
-               
-               //dataset.sort(function(a, b){return a.region-b.region});
-               x.domain(dataset.map(function(d){return d.region_2;}));
-               y.domain([0, 0.75]);
-
-//definido o dominio x do gráfico
-	          svg.append("g")
-		    .attr("class", "x axis")
-		    .attr("transform", "translate(0," + height + ")")
-		    //.call(xAxis);
-
-//definido o dominio y do gráfico
-	          svg.append("g")
-		    .attr("class", "y axis")
-		    .call(yAxis)
-		    .append("text")
-		    .attr("transform", "rotate(-90)")
-		    .attr("y", 6)
-		    .attr("dy", ".71em")
-		    .style("text-anchor", "end")
-		    .text("Frequência");
-
-//Título do Gráfico *tittle* é adicionado aqui no svg
-		  svg.append("text")
-		    .attr("x", (width / 2))             
-		    .attr("y", 0 - (margin.top / 2))
-		    .attr("text-anchor", "middle")  
-		    .style("font-size", "20px") 
-		    .text(region);
-
-//Cria o gráfico. do tipo barra utilizando os dados que satisfaçam o usuário. o gráfico inicia com 0 no y e é mudado na transição
-                  var bars = svg.selectAll(".bar")
-		    .data(dataset)
-		    .enter()
-                  bars.append("rect")
-		    .attr("class", "bar")
-		    .attr("x", function(d) {return x(d.region_2)})
-		    .attr("width", x.rangeBand())
-		    .attr("y", function(d) {return y(d.region/100);})
-		    .attr("height", function(d) {return height - y(d.region/100);})
-		    .style("fill", function(d) {return d.color})
-		    .on('mouseover', tip.show)
-		    .on('mouseout', tip.hide)
-
-                 bars.append("text").text(function(d) {return d.region+"%";})
-		    .attr("x", function(d) { return x(d.region_2)+x.rangeBand()/2; })
-		    .attr("y", function(d) {return y(d.region/100)-6;})
-		    .attr("text-anchor", "middle")
-                    .style("font-size", "16px");
-
-                                      
-	     });
-	}
-
-	function imprimeLegenda(arquivo, divsvg)
-        {
-
-             var legendRectSize = 18;                              
-             
-             var legendSpacing = 4; 
-             
-             var color = d3.scale.ordinal(d3.schemeCategory20b);
- 
-             
-             var margin = {top: 30, right: 10, bottom: 30, left: 32},
-			  width = document.getElementById(divsvg).offsetWidth - (margin.left) - (margin.right),
-			  height = document.getElementById(divsvg).offsetHeight - (margin.top) - (margin.bottom);
-
-
-//cria o svg que receberá o Grafico
-	     var svg = d3.select("div#"+divsvg).append("svg")
-		  .attr("width", width + margin.left + margin.right)
-		  .attr("height", height + margin.top + margin.bottom)
-		.append("g")
-		  .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); 
-             
-             d3.csv(arquivo, function(dataset) {  
-
-//Chama a legenda na div corpo 2. E define o tamanho do quadrinho dessa legenda 
-		 var legend = svg.selectAll('.legend')                     
-		    .data(dataset)                                   
-		    .enter()                                                
-		    .append('g')                                            
-		    .attr('class', 'legend')                                
-		    .attr('transform', function(d, i) {                     
-		       var height = legendRectSize + legendSpacing;          
-		       var offset =  height * color.domain().length / 2;     
-		       var horz = legendRectSize;                       
-		       var vert = i * height - offset;                       
-		       return 'translate(' + horz + ',' + vert + ')';        
-		       });
-
-                 legend.append('rect')                                      // NEW
-                    .attr('width', legendRectSize)                          // NEW
-                    .attr('height', legendRectSize)                         // NEW
-                    .style('fill', function(d) {return d.color})            // NEW
-                    .style('stroke', color);                                // NEW                                                     
-//Os dizeres que serão mostrado na legenda, bem como seu espaço e posição		  
-		 legend.append('text')                                     
-		    .attr('x', legendRectSize + legendSpacing)              
-		    .attr('y', legendRectSize - legendSpacing)              
-		    .text(function(d) {return d.region_1;});
-                                      
-	     });
-	}
-        
-        function sum(arr) {
-          return arr.reduce(function (a, b) {
-             return a + b;
-           }, 0);
-        }
-  </script>
-<!--Final do JavaScript no Código-->
-  <script> atualiza_div();</script>
-</body>
+  </body>
 </html>
