@@ -3,7 +3,7 @@ am4core.useTheme(am4themes_animated);
 var chart = am4core.create("chartdiv", am4charts.XYChart);
 
 chart.data = [{
-    "category": "Ciências Agrárias",
+    "category": "Agrárias",
     "value1": 0,
     "value2": 110680,
     "value3": 26983,
@@ -13,7 +13,7 @@ chart.data = [{
     "value7": 20175,
     "value8": 315
 }, {
-    "category": "Ciências Biológicas",
+    "category": "Biológicas",
     "value1": 110680,
     "value2": 0,
     "value3": 149228,
@@ -23,7 +23,7 @@ chart.data = [{
     "value7": 15419,
     "value8": 653
 }, {
-    "category": "Ciências da Saúde",
+    "category": "Saúde",
     "value1": 26983,
     "value2": 149288,
     "value3": 0,
@@ -33,7 +33,7 @@ chart.data = [{
     "value7": 17665,
     "value8": 3750
 }, {
-    "category": "Ciências Exatas e da Terra",
+    "category": "Exatas/Terra",
     "value1": 40035,
     "value2": 71224,
     "value3": 53047,
@@ -43,7 +43,7 @@ chart.data = [{
     "value7": 117625,
     "value8": 949
 }, {
-    "category": "Ciências Humanas",
+    "category": "Humanas",
     "value1": 4902,
     "value2": 10312,
     "value3": 31448,
@@ -53,7 +53,7 @@ chart.data = [{
     "value7": 4608,
     "value8": 10638
 }, {
-    "category": "Ciências Sociais e Aplicadas",
+    "category": "Sociais/Aplicadas",
     "value1": 5244,
     "value2": 3327,
     "value3": 9684,
@@ -73,7 +73,7 @@ chart.data = [{
     "value7": 0,
     "value8": 564
 }, {
-    "category": "Linguistíca, Letras e Artes",
+    "category": "Linguistíca",
     "value1": 315,
     "value2": 653,
     "value3": 3750,
